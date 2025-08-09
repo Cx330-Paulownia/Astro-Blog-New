@@ -1,0 +1,117 @@
+---
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { getEntry } from "astro:content";
+import { render } from "astro:content";
+import Twikoo from "@components/comment/Twikoo.astro";
+import Markdown from "@components/misc/Markdown.astro";
+import I18nKey from "../i18n/i18nKey";
+import { i18n } from "../i18n/translation";
+
+const friendsPost = await getEntry("spec", "friends");
+
+if (!friendsPost) {
+	throw new Error("Friends page content not found");
+}
+
+const { Content } = await render(friendsPost);
+const items = [
+	{
+		title: "Astro",
+		imgurl: "https://sway.cloud.microsoft/s/oXulfle6Rt1uSPht/images/IhUrfxrJ6di6i4",
+		desc: "一个现代化的静态站点生成框架框架",
+		siteurl: "https://github.com/withastro/astro",
+		tags: ["框架"],
+	},
+    {
+		title: "Fuwari",
+		imgurl:"https://sway.cloud.microsoft/s/oXulfle6Rt1uSPht/images/DwFWxlswoBNQKk",
+		desc: "基于 Astro 开发的静态博客模板",
+		siteurl: "https://github.com/saicaca/fuwari",
+		tags: ["主题"],
+	},
+	{
+		title: "禾守の小站",
+		imgurl: "https://sway-cdn.com/s/wl1r2oqIuZtCtQbJ/images/9ecO8UCSDAkWDf",
+		desc: "这里是一只萌新的博客~",
+		siteurl: "https://blog.dmoe.top",
+		tags: ["博客"],
+	},
+];
+---
+<MainGridLayout title={i18n(I18nKey.friends)} description={i18n(I18nKey.friends)}>
+    <div class="space-y-6 w-full">
+        <div class="card-base rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+            <div class="z-10 px-9 py-6 relative w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8 my-4">
+                    {items.map((item) => (
+                            <div class="flex flex-nowrap items-stretch h-28 gap-4 rounded-[var(--radius-large)] group">
+                                <a
+                                    href={item.siteurl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="relative w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-900
+                                        transition-transform hover:scale-105 hover:shadow-md duration-300"
+                                >
+                                    <div class="absolute inset-0 w-full h-full">
+                                        <img
+                                            src={item.imgurl}
+                                            alt={item.title + "头像"}
+                                            class="w-full h-full object-cover"
+                                            loading="lazy"
+                                            style="aspect-ratio:1/1"
+                                        />
+                                    </div>
+                                </a>
+
+                                <div class="grow w-full flex flex-col">
+                                    <div class="font-bold transition text-lg text-neutral-900 dark:text-neutral-100 mb-1">
+                                        {item.title}
+                                    </div>
+                                    <div class="text-50 text-sm font-medium">
+                                        {item.desc}
+                                    </div>
+                                    <div class="mt-auto">
+                                        <div class="flex flex-row flex-wrap items-center gap-2">
+                                            {item.tags?.map((tag) => (
+                                                <span class="transition text-sm font-medium px-2 py-1 bg-[var(--primary)] rounded-full text-lg dark:text-neutral-100">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a
+                                    href={item.siteurl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="flex btn-regular w-[3.25rem] rounded-lg bg-[var(--enter-btn-bg)] 
+                                       hover:bg-[var(--enter-btn-bg-hover)] active:bg-[var(--enter-btn-bg-active)] 
+                                       active:scale-95 transition-all"
+                                >
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    class="text-[var(--primary)] text-4xl mx-auto"
+                                    fill="currentColor"
+                                    width="1em"
+                                    height="1em"
+                                >
+                                    <path d="M12.6 12L8.7 8.1q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.6 4.6q-.275.275-.7.275t-.7-.275t-.275-.7t.275-.7z" />
+                                </svg>
+                                </a>
+                            </div>
+                        ))
+                    }
+                </div>
+                <Markdown class="mt-2">
+                    <Content />
+                </Markdown>
+            </div>
+        </div>
+
+        <div class="card-base p-6 mb-4 rounded-[var(--radius-large)]">
+            <Twikoo path={`/spec/friends`} />
+        </div>
+    </div>
+</MainGridLayout>
